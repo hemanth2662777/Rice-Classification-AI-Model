@@ -1,0 +1,7 @@
+tensorflow==2.13.0
+keras==2.13.1
+Flask==3.1.1
+Werkzeug==3.1.3
+numpy==1.24.3
+Pillow
+gunicorn

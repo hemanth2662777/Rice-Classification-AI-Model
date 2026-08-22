@@ -1,0 +1,435 @@
+:root {
+  --primary: #1089d3;
+  --primary-light: #12b1d1;
+  --primary-dark: #0875b8;
+  --text: #172033;
+  --muted: #8b96a7;
+  --border: rgba(255, 255, 255, 0.9);
+  --input-bg: #ffffff;
+  --card-bg: #f8f9fd;
+  --shadow: rgba(133, 189, 215, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body.auth-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(18, 177, 209, 0.16),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(16, 137, 211, 0.14),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #eef8ff 0%, #f8fbff 45%, #edf7fc 100%);
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  padding: 38px 35px 30px;
+  margin: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 32px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(244, 248, 252, 0.96)
+  );
+  box-shadow:
+    0 30px 70px rgba(52, 120, 155, 0.16),
+    0 12px 30px rgba(133, 189, 215, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  backdrop-filter: blur(18px);
+  animation: cardEnter 0.7s ease forwards;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  top: -95px;
+  right: -70px;
+  border-radius: 50%;
+  background: rgba(18, 177, 209, 0.12);
+  pointer-events: none;
+}
+
+.container::after {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  bottom: -70px;
+  left: -55px;
+  border-radius: 50%;
+  background: rgba(16, 137, 211, 0.08);
+  pointer-events: none;
+}
+
+.heading {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--primary);
+}
+
+.form {
+  position: relative;
+  z-index: 1;
+  margin-top: 24px;
+}
+
+.form .input {
+  display: block;
+  width: 100%;
+  height: 54px;
+  margin-top: 16px;
+  padding: 0 18px;
+  border: 1.5px solid #e5edf3;
+  border-radius: 16px;
+  outline: none;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow:
+    0 8px 20px rgba(133, 189, 215, 0.08),
+    inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.form .input::placeholder {
+  color: #a7b0bc;
+  font-weight: 400;
+}
+
+.form .input:hover {
+  border-color: #c9e5f1;
+}
+
+.form .input:focus {
+  border-color: var(--primary-light);
+  box-shadow:
+    0 0 0 4px rgba(18, 177, 209, 0.1),
+    0 10px 22px rgba(133, 189, 215, 0.12);
+  transform: translateY(-1px);
+}
+
+.form .forgot-password {
+  display: block;
+  margin-top: 11px;
+  margin-left: 4px;
+}
+
+.form .forgot-password a {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.form .forgot-password a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.form .login-button {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 54px;
+  margin: 24px auto 18px;
+  border: none;
+  border-radius: 16px;
+  outline: none;
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--primary-light) 100%
+  );
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow:
+    0 12px 25px rgba(16, 137, 211, 0.24),
+    0 5px 12px rgba(18, 177, 209, 0.16);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
+}
+
+.form .login-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+}
+
+.form .login-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow:
+    0 16px 30px rgba(16, 137, 211, 0.28),
+    0 7px 15px rgba(18, 177, 209, 0.18);
+}
+
+.form .login-button:hover::before {
+  left: 140%;
+}
+
+.form .login-button:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 8px 15px rgba(16, 137, 211, 0.2);
+}
+
+.error {
+  position: relative;
+  z-index: 2;
+  margin-top: 12px;
+  padding: 11px 14px;
+  border: 1px solid rgba(220, 53, 69, 0.18);
+  border-radius: 12px;
+  background: rgba(220, 53, 69, 0.07);
+  color: #d9364f;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  animation: errorShake 0.35s ease;
+}
+
+.register-link {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.register-link a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.register-link a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.social-account-container {
+  position: relative;
+  z-index: 1;
+  margin-top: 27px;
+}
+
+.social-account-container .title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #a0aab7;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.social-account-container .title::before,
+.social-account-container .title::after {
+  content: "";
+  width: 55px;
+  height: 1px;
+  background: #e4ebf1;
+}
+
+.social-account-container .social-accounts {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.social-account-container .social-accounts .social-button {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid #e5edf3;
+  border-radius: 14px;
+  background: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 7px 18px rgba(133, 189, 215, 0.1);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.social-account-container .social-accounts .social-button:hover {
+  transform: translateY(-4px);
+  border-color: #c7e4ef;
+  box-shadow: 0 12px 24px rgba(133, 189, 215, 0.2);
+}
+
+.social-account-container .social-accounts .social-button:active {
+  transform: translateY(0) scale(0.94);
+}
+
+.social-account-container .social-accounts .social-button .svg {
+  width: 18px;
+  height: 18px;
+  fill: #202832;
+  transition: transform 0.25s ease;
+}
+
+.social-account-container .social-accounts .social-button:hover .svg {
+  transform: scale(1.08);
+}
+
+.social-account-container .social-accounts .google:hover {
+  border-color: rgba(66, 133, 244, 0.35);
+}
+
+.social-account-container .social-accounts .apple:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.social-account-container .social-accounts .twitter:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.agreement {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin-top: 23px;
+  text-align: center;
+}
+
+.agreement a {
+  color: #a2acb8;
+  font-size: 9px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.agreement a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes errorShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+@media (max-width: 480px) {
+  body.auth-body {
+    padding: 20px 12px;
+  }
+
+  .container {
+    max-width: 100%;
+    margin: 10px;
+    padding: 32px 24px 26px;
+    border-radius: 28px;
+  }
+
+  .heading {
+    font-size: 28px;
+  }
+
+  .form .input,
+  .form .login-button {
+    height: 52px;
+  }
+
+  .social-account-container .title::before,
+  .social-account-container .title::after {
+    width: 38px;
+  }
+}
+
+@media (max-width: 340px) {
+  .container {
+    padding: 28px 18px 24px;
+  }
+
+  .heading {
+    font-size: 25px;
+  }
+
+  .social-account-container .social-accounts {
+    gap: 10px;
+  }
+}
