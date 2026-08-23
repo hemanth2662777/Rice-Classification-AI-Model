@@ -1679,3 +1679,21 @@ button {
     transition-duration: 0.01ms !important;
   }
 }
+.prediction-image {
+  width: 100%;
+  max-width: 500px;
+  margin: 25px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.result-image {
+  display: block;
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  max-height: 450px;
+  object-fit: contain;
+  border-radius: 18px;
+}

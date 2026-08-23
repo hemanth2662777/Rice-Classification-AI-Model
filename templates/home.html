@@ -123,7 +123,7 @@
 
         <div class="hero-image">
           <img
-            src="static/picture.png"
+            src="{{ url_for('static', filename='picture.png') }}"
             alt="Rice grains and rice field"
             loading="eager"
           />
@@ -290,46 +290,73 @@
         </div>
       </section>
 
+      <!-- =====================================================
+           CLASSIFICATION RESULT
+           ===================================================== -->
+
       {% if prediction %}
 
-      <section class="result-section">
+      <section class="result-section" id="classification-result">
         <div class="section-heading">
-          <span class="section-eyebrow">ANALYSIS COMPLETE</span>
+          <span class="section-eyebrow"> ANALYSIS COMPLETE </span>
+
           <h2>Classification Result</h2>
         </div>
 
         <div class="result-card">
-          <!-- UPLOADED IMAGE -->
+          <!-- =================================================
+               ANALYZED IMAGE
+               ================================================= -->
+
           <div class="result-image-container">
             {% if image_path %}
 
-            <img
-              src="{{ image_path }}"
-              class="preview"
-              alt="Uploaded rice grain image"
-            />
+            <div class="result-image-wrapper">
+              <img
+                src="{{ image_path }}"
+                class="preview"
+                alt="Uploaded rice grain image"
+                loading="eager"
+                onerror="handleResultImageError(this)"
+              />
 
-            <div class="image-badge">Analyzed Image</div>
+              <div
+                id="imageLoadError"
+                class="image-error"
+                style="display: none"
+              >
+                <span>⚠️</span>
+
+                <p>Unable to load analyzed image.</p>
+              </div>
+
+              <div class="image-badge">✓ Analyzed Image</div>
+            </div>
 
             {% else %}
 
             <div class="image-error">
               <span>⚠️</span>
+
               <p>Uploaded image path not found.</p>
             </div>
 
             {% endif %}
           </div>
 
-          <!-- PREDICTION -->
+          <!-- =================================================
+               PREDICTION INFORMATION
+               ================================================= -->
+
           <div class="result-content">
             <span class="result-label"> PREDICTED RICE TYPE </span>
 
             <h3>{{ prediction }}</h3>
 
             <div class="confidence-header">
-              <span>AI Confidence</span>
-              <strong>{{ confidence|float|round(2) }}%</strong>
+              <span> AI Confidence </span>
+
+              <strong> {{ confidence|float|round(2) }}% </strong>
             </div>
 
             <div
@@ -338,6 +365,7 @@
               aria-valuenow="{{ confidence|float }}"
               aria-valuemin="0"
               aria-valuemax="100"
+              aria-label="AI confidence"
             >
               <div
                 class="confidence-fill"
@@ -351,14 +379,40 @@
             </p>
 
             <div class="result-status">
-              <span class="status-check">✓</span>
+              <span class="status-check"> ✓ </span>
+
               Prediction successfully completed
+            </div>
+
+            <!-- =================================================
+                 RESULT DETAILS
+                 ================================================= -->
+
+            <div class="result-details">
+              <div class="result-detail">
+                <span> Rice Variety </span>
+
+                <strong> {{ prediction }} </strong>
+              </div>
+
+              <div class="result-detail">
+                <span> Confidence </span>
+
+                <strong> {{ confidence|float|round(2) }}% </strong>
+              </div>
+
+              <div class="result-detail">
+                <span> Model </span>
+
+                <strong> Deep Learning </strong>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {% endif %}
+
       <section class="technology-section">
         <div class="section-heading">
           <span class="section-eyebrow"> TECHNOLOGY </span>
@@ -430,6 +484,10 @@
       <span class="footer-copy"> © 2026 GrainPalette AI </span>
     </footer>
 
+    <!-- =====================================================
+         ABOUT PANEL
+         ===================================================== -->
+
     <div
       id="about"
       class="panel-overlay"
@@ -477,6 +535,10 @@
       </div>
     </div>
 
+    <!-- =====================================================
+         CONTACT PANEL
+         ===================================================== -->
+
     <div
       id="contact"
       class="panel-overlay"
@@ -508,7 +570,8 @@
             <span>✉️</span>
 
             <div>
-              <small>Email</small>
+              <small> Email </small>
+
               <strong> hemanth2662n@gmail.com </strong>
             </div>
           </a>
@@ -517,7 +580,8 @@
             <span>📱</span>
 
             <div>
-              <small>Phone</small>
+              <small> Phone </small>
+
               <strong> +91 7013569762 </strong>
             </div>
           </a>
@@ -525,8 +589,17 @@
       </div>
     </div>
 
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
     <script>
+      /* =====================================================
+         FILE SELECTION
+         ===================================================== */
+
       const fileInput = document.getElementById("rice-image");
+
       const selectedFile = document.getElementById("selectedFile");
 
       if (fileInput && selectedFile) {
@@ -535,13 +608,33 @@
             const file = this.files[0];
 
             selectedFile.textContent = file.name;
+
             selectedFile.classList.add("has-file");
           } else {
             selectedFile.textContent = "No image selected";
+
             selectedFile.classList.remove("has-file");
           }
         });
       }
+
+      /* =====================================================
+         RESULT IMAGE ERROR HANDLER
+         ===================================================== */
+
+      function handleResultImageError(image) {
+        image.style.display = "none";
+
+        const errorElement = document.getElementById("imageLoadError");
+
+        if (errorElement) {
+          errorElement.style.display = "flex";
+        }
+      }
+
+      /* =====================================================
+         ABOUT / CONTACT PANELS
+         ===================================================== */
 
       function showPanel(id) {
         const panel = document.getElementById(id);
@@ -551,6 +644,7 @@
         }
 
         panel.classList.add("show");
+
         document.body.classList.add("panel-open");
       }
 
@@ -562,6 +656,7 @@
         }
 
         panel.classList.remove("show");
+
         document.body.classList.remove("panel-open");
       }
 
@@ -571,12 +666,21 @@
         }
       }
 
+      /* =====================================================
+         ESCAPE KEY
+         ===================================================== */
+
       document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {
           hidePanel("about");
+
           hidePanel("contact");
         }
       });
+
+      /* =====================================================
+         PREDICTION FORM
+         ===================================================== */
 
       const predictionForm = document.getElementById("predictionForm");
 
@@ -590,6 +694,7 @@
 
           if (button) {
             button.classList.add("loading");
+
             button.disabled = true;
           }
 
@@ -598,6 +703,23 @@
           }
         });
       }
+
+      /* =====================================================
+         AUTO-SCROLL TO RESULT
+         ===================================================== */
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const result = document.getElementById("classification-result");
+
+        if (result) {
+          setTimeout(function () {
+            result.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }, 150);
+        }
+      });
     </script>
   </body>
 </html>
