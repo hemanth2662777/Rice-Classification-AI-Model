@@ -1008,14 +1008,11 @@ def logout():
 # ============================================================
 
 if __name__ == "__main__":
-
     print("==============================================")
     print("       GRAINPALETTE AI - READY")
     print("==============================================")
 
-    print(
-        f"Running on port: {PORT}"
-    )
+    print(f"Running on port: {PORT}")
 
     app.run(
         host="0.0.0.0",
