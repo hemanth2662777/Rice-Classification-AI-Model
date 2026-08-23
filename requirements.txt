@@ -1,8 +1,11 @@
+Flask==3.0.3
+gunicorn==23.0.0
 tensorflow==2.15.0
 numpy==1.26.4
 pandas==2.2.2
 scikit-learn==1.5.1
 Pillow==10.4.0
 matplotlib==3.9.2
+fastapi==0.141.1
+uvicorn==0.52.4
 gradio==5.0.0
-gunicorn==23.0.0
