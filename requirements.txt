@@ -6,3 +6,4 @@ Pillow==10.4.0
 matplotlib==3.9.2
 gradio==5.0.0
 tflite-runtime
+gunicorn==23.0.0
