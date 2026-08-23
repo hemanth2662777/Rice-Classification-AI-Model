@@ -314,16 +314,42 @@ def allowed_file(filename):
 # ============================================================
 # RICE PREDICTION
 # ============================================================
-
 def predict_rice(image_path):
 
+    import time
+
+    start_time = time.time()
+
     try:
+
+        print("==============================================")
+        print("🔍 STARTING RICE PREDICTION")
+        print(f"📁 Image: {image_path}")
+
+        # ----------------------------------------------------
+        # CHECK FILE
+        # ----------------------------------------------------
+
+        if not os.path.isfile(image_path):
+            raise FileNotFoundError(
+                f"Image does not exist: {image_path}"
+            )
+
+        print(
+            f"📦 File size: {os.path.getsize(image_path)} bytes"
+        )
 
         # ----------------------------------------------------
         # OPEN IMAGE
         # ----------------------------------------------------
 
+        print("🖼️ Opening image...")
+
         with Image.open(image_path) as image:
+
+            print(
+                f"Original image size: {image.size}"
+            )
 
             image = image.convert("RGB")
 
@@ -337,14 +363,18 @@ def predict_rice(image_path):
                 dtype=np.float32
             )
 
-        # ----------------------------------------------------
-        # NORMALIZATION
-        # ----------------------------------------------------
-
-        image_array = image_array / 255.0
+        print(
+            f"✅ Image converted: {image_array.shape}"
+        )
 
         # ----------------------------------------------------
-        # ADD BATCH DIMENSION
+        # NORMALIZE
+        # ----------------------------------------------------
+
+        image_array /= 255.0
+
+        # ----------------------------------------------------
+        # BATCH DIMENSION
         # ----------------------------------------------------
 
         image_array = np.expand_dims(
@@ -353,26 +383,38 @@ def predict_rice(image_path):
         )
 
         print(
-            "Image input shape:",
-            image_array.shape
-        )
-
-        # ----------------------------------------------------
-        # MODEL PREDICTION
-        # ----------------------------------------------------
-
-        predictions = model.predict(
-            image_array,
-            verbose=0
-        )
-
-        predictions = np.asarray(
-            predictions
+            f"✅ Final model input: {image_array.shape}"
         )
 
         print(
-            "Raw predictions:",
-            predictions
+            f"⏱️ Preprocessing time: "
+            f"{time.time() - start_time:.2f}s"
+        )
+
+        # ----------------------------------------------------
+        # MODEL
+        # ----------------------------------------------------
+
+        print("🧠 Starting TensorFlow inference...")
+
+        prediction_start = time.time()
+
+        predictions = model(
+            image_array,
+            training=False
+        ).numpy()
+
+        prediction_time = (
+            time.time() - prediction_start
+        )
+
+        print(
+            f"✅ TensorFlow inference completed "
+            f"in {prediction_time:.2f}s"
+        )
+
+        print(
+            f"Raw predictions: {predictions}"
         )
 
         # ----------------------------------------------------
@@ -384,64 +426,58 @@ def predict_rice(image_path):
             or predictions.shape[0] != 1
             or predictions.shape[1] != len(CLASS_NAMES)
         ):
-
             raise ValueError(
                 "Unexpected model prediction shape: "
                 f"{predictions.shape}"
             )
 
         # ----------------------------------------------------
-        # GET CLASS
+        # PROBABILITIES
+        # ----------------------------------------------------
+
+        values = predictions[0]
+
+        # If model outputs logits
+        if (
+            np.any(values < 0)
+            or np.any(values > 1)
+            or not np.isclose(
+                np.sum(values),
+                1.0,
+                atol=0.01
+            )
+        ):
+
+            values = (
+                np.exp(
+                    values - np.max(values)
+                )
+            )
+
+            values /= np.sum(values)
+
+        # ----------------------------------------------------
+        # CLASS
         # ----------------------------------------------------
 
         predicted_index = int(
-            np.argmax(
-                predictions[0]
-            )
+            np.argmax(values)
         )
-
-        confidence = float(
-            predictions[0][predicted_index]
-        )
-
-        # ----------------------------------------------------
-        # SAFETY: HANDLE LOGITS
-        # ----------------------------------------------------
-
-        # If the model outputs logits instead of probabilities,
-        # convert them to probabilities.
-
-        if confidence < 0 or confidence > 1:
-
-            exp_predictions = np.exp(
-                predictions[0]
-                - np.max(predictions[0])
-            )
-
-            probabilities = (
-                exp_predictions
-                / np.sum(exp_predictions)
-            )
-
-            confidence = float(
-                probabilities[predicted_index]
-            )
-
-        # ----------------------------------------------------
-        # CLASS NAME
-        # ----------------------------------------------------
 
         if not (
             0 <= predicted_index < len(CLASS_NAMES)
         ):
-
             raise ValueError(
-                "Invalid predicted class index."
+                f"Invalid class index: {predicted_index}"
             )
 
         predicted_class = CLASS_NAMES[
             predicted_index
         ]
+
+        confidence = float(
+            values[predicted_index]
+        )
 
         confidence_percent = round(
             confidence * 100,
@@ -449,12 +485,19 @@ def predict_rice(image_path):
         )
 
         print(
-            f"✅ Prediction: {predicted_class}"
+            f"🎯 Prediction: {predicted_class}"
         )
 
         print(
-            f"✅ Confidence: {confidence_percent}%"
+            f"📊 Confidence: {confidence_percent}%"
         )
+
+        print(
+            f"⏱️ Total prediction time: "
+            f"{time.time() - start_time:.2f}s"
+        )
+
+        print("==============================================")
 
         return (
             predicted_class,
@@ -463,14 +506,13 @@ def predict_rice(image_path):
 
     except Exception as e:
 
-        print(
-            "❌ Prediction error:",
-            repr(e)
-        )
+        print("==============================================")
+        print("❌ PREDICTION FAILED")
+        print(f"❌ Error type: {type(e).__name__}")
+        print(f"❌ Error: {e}")
+        print("==============================================")
 
         raise
-
-
 # ============================================================
 # LOGIN REQUIRED
 # ============================================================
