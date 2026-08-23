@@ -7,3 +7,4 @@ matplotlib==3.9.2
 gradio==5.0.0
 tflite-runtime
 gunicorn==23.0.0
+Flask==3.0.3
